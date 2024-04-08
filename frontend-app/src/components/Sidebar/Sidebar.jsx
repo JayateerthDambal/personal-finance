@@ -27,7 +27,6 @@ const Sidebar = ({ open, userData }) => {
   const theme = useTheme();
   const location = useLocation();
   const [openSubLinks, setOpenSubLinks] = useState({});
-  const { access_token } = getToken();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const toggleSubLinks = (title) => {
@@ -50,6 +49,7 @@ const Sidebar = ({ open, userData }) => {
         backgroundColor: isActive(item.path)
           ? theme.palette.action.selected
           : "transparent", // Change background color if active
+        borderRadius: "12px",
       }}
     >
       <ListItemIcon>

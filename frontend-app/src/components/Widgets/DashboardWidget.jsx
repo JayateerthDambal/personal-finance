@@ -1,8 +1,9 @@
 import React from "react";
-import { Paper, Typography, Box } from "@mui/material";
+import { Paper, Typography, Box, useTheme } from "@mui/material";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { fShortenNumber } from "../../utils/formatNumber";
+import { useColorMode } from "../../contexts/ColorModeContext";
 const widgetStyle = {
   padding: "20px",
   borderRadius: "15px",
@@ -25,6 +26,8 @@ const numberStyle = {
 };
 
 const DashboardWidget = ({ title, value, trend }) => {
+  const theme = useTheme();
+  const { mode } = useColorMode();
   return (
     <Paper style={widgetStyle}>
       <Box>

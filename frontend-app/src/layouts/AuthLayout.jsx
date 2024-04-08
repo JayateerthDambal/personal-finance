@@ -63,13 +63,9 @@ const AuthLayout = () => {
           gap: "10px",
         }}
       >
-        <img
-          src="/assets/icons/logo/logo.svg"
-          alt="Accomptant"
-          style={{ height: "50px" }}
-        />
-        <span style={{ fontSize: "24px", fontWeight: "bold" }}>
-          Accomptant Inc.
+        <img src="/assets/artha.svg" alt="Artha" style={{ height: "50px" }} />
+        <span style={{ fontSize: "24px", fontWeight: "bold", color: "#333" }}>
+          Artha
         </span>
       </motion.div>
       <motion.div initial="hidden" animate="visible" variants={outletVariants}>

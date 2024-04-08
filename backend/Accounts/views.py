@@ -1,16 +1,18 @@
 from django.shortcuts import render
 import json
-from .models import UserAccount
+from .models import UserAccount, BankAccount
 from django.http import JsonResponse
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.core.files import File
 from django.contrib.auth import authenticate
 from .renderers import UserRenderer
 from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from . import serializers
+from rest_framework.exceptions import AuthenticationFailed, ValidationError
+from rest_framework.parsers import FileUploadParser
 
 
 def serverHealth(request):
@@ -49,7 +51,7 @@ class UserLoginView(APIView):
         if serializer.is_valid(raise_exception=True):
             email = serializer.data.get("email")
             password = serializer.data.get("password")
-
+            print(f"email: {email}, password: {password}")
             # Authenticating the User
             user = authenticate(email=email, password=password)
             print(user)
@@ -74,3 +76,51 @@ class UserProfileView(APIView):
 
     def post(self, request):
         pass
+
+
+class VerifyTokenAPIView(APIView):
+    renderer_classes = [UserRenderer]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        try:
+            user = request.user
+            return Response({'user_id': user.id}, status=status.HTTP_200_OK)
+
+        except AuthenticationFailed:
+            return Response("Invaid Access Token", status=status.HTTP_401_UNAUTHORIZED)
+
+
+class BankAccountCreateView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, format=None):
+        serializer = serializers.BankAccountSerializer(
+            data=request.data, context={'request': request})
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CSVUploadView(APIView):
+    parser_classes = [FileUploadParser]
+    renderer_classes = [UserRenderer]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, format=None):
+        user = request.user
+        bank_account_id = request.data.get('bank_account')
+
+        if not bank_account_id:
+            return Response({'errors': 'Bank Account is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            bank_account = BankAccount.objects.get(
+                user=user, account_number=bank_account_id)
+
+        except BankAccount.DoesNotExist:
+            return Response({'error': "Bank Account does not Exist"}, status=status.HTTP_404_NOT_FOUND)
+
+        # uploaded_files =

@@ -1,4 +1,4 @@
-from .models import UserAccount
+from .models import UserAccount, SubscriptionModel, SubscriptionPlan, BankAccount
 from rest_framework import serializers
 from xml.dom import ValidationErr
 from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
@@ -93,3 +93,29 @@ class SendPasswordResetEmailSerialzier(serializers.Serializer):
             return attrs
         else:
             raise ValidationErr("You are not a registered user.")
+
+
+class BankAccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BankAccount
+        fields = ['id', 'reference_name', 'account_type', 'user']
+        # The user field should not be included in the request
+        read_only_fields = ('user',)
+
+    def validate(self, attrs):
+        # Get the current user from the serializer context
+        user = self.context['request'].user
+        reference_name = attrs.get('reference_name')
+        account_type = attrs.get('account_type')
+
+        # Check if a bank account with the same reference_name and account_type exists for this user
+        if BankAccount.objects.filter(user=user, reference_name=reference_name, account_type=account_type).exists():
+            raise serializers.ValidationError(
+                "A bank account with these details already exists.")
+
+        return attrs
+
+    def create(self, validated_data):
+        # The user is added from the request context, ensuring the bank account is linked to the logged-in user
+        user = self.context['request'].user
+        return BankAccount.objects.create(user=user, **validated_data)
