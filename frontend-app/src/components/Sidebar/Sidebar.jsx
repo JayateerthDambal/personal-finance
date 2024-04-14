@@ -20,7 +20,7 @@ import config from "./config";
 import { Logout } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { unSetUserToken } from "../../features/authSlice";
-import { getToken, removeToken } from "../../services/LocalStorageService";
+import { removeToken } from "../../services/LocalStorageService";
 const drawerWidth = 220;
 
 const Sidebar = ({ open, userData }) => {
@@ -77,14 +77,14 @@ const Sidebar = ({ open, userData }) => {
         [`& .MuiDrawer-paper`]: {
           width: drawerWidth,
           boxSizing: "border-box",
-          backgroundColor: theme.palette.appBarColor,
+          backgroundColor: theme.palette.background.paper,
         },
       }}
     >
       <Toolbar
         sx={{
           m: 2,
-          backgroundColor: theme.palette.background.paper,
+          backgroundColor: theme.palette.background.coldSteel,
           borderRadius: "12px",
         }}
       >
@@ -135,7 +135,7 @@ const Sidebar = ({ open, userData }) => {
                         style={{
                           paddingLeft: "20px",
                           backgroundColor: isActive(subLink.path)
-                            ? theme.palette.action.selected
+                            ? theme.palette.background.coldSteel
                             : "transparent",
                         }}
                       >

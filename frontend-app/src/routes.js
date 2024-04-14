@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
 import { DashboardLayout } from "./layouts";
-import { DashboardPage, LoginPage } from "./pages";
+import { DashboardPage, LoginPage, UserProfilePage, AccountsPage } from "./pages";
 import AuthLayout from './layouts/AuthLayout';
 import { getToken } from './services/LocalStorageService';
 import { CircularProgress } from "@mui/material";
@@ -67,8 +67,9 @@ const Router = () => {
             element: <ProtectedRoute> <DashboardLayout /></ProtectedRoute>,
             children: [
                 // { path: "app", element: <DashboardPage /> },
-                { path: "", element: <DashboardPage /> }
-
+                { path: "", element: <DashboardPage /> },
+                { path: "user-profile", element: <UserProfilePage /> },
+                { path: "accounts", element: <AccountsPage /> }
             ]
         },
         // Public Routes

@@ -7,7 +7,7 @@ import { useColorMode } from "../../contexts/ColorModeContext";
 const widgetStyle = {
   padding: "20px",
   borderRadius: "15px",
-  background: "linear-gradient(135deg, #C5FFF8, #5FBDFF)", // Gradient background
+  background: "linear-gradient(135deg, ##bdc4c8, ##8a949d)", // Gradient background
   color: "#fff",
   display: "flex",
   justifyContent: "space-between",
@@ -22,7 +22,7 @@ const numberStyle = {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
-  boxShadow: "10px 10px 15px 5px rgba(124,0,90,0.2)",
+  boxShadow: "5px 5px 10px 5px #bdc4c8",
 };
 
 const DashboardWidget = ({ title, value, trend }) => {

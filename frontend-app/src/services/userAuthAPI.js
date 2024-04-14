@@ -53,17 +53,6 @@ export const userAuthAPI = createApi({
                 }
             }
         }),
-        getCustomerProfile: builder.query({
-            query: (access_token) => {
-                return {
-                    url: "customer-profile/",
-                    method: "GET",
-                    headers: {
-                        'authorization': `Bearer ${access_token}`
-                    }
-                }
-            }
-        }),
 
     }),
 })

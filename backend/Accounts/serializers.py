@@ -95,6 +95,14 @@ class SendPasswordResetEmailSerialzier(serializers.Serializer):
             raise ValidationErr("You are not a registered user.")
 
 
+class GetBankAccountSerializer(serializers.ModelSerializer):
+    user = UserProfileSerializer(read_only=True)
+
+    class Meta:
+        model = BankAccount
+        fields = ['id', 'user', 'reference_name', 'account_type']
+
+
 class BankAccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = BankAccount

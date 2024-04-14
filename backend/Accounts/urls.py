@@ -11,8 +11,12 @@ urlpatterns = [
     # Verify Token
     path("verify-token/", views.VerifyTokenAPIView.as_view(), name='verify-token'),
 
-    # Create Bank Account
+    #  Bank Account Functions
     path('add-bank-account/', views.BankAccountCreateView.as_view(),
          name='add-bank-account'),
+    path("get-accounts/", views.GetBankAccountsAPIView.as_view(), name='get-accounts'),
+
+    path("upload-statement/<int:account_id>", views.BankStatementUploadAPIView.as_view(),
+         name="upload-statement"),
 
 ]

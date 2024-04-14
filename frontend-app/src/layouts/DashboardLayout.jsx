@@ -55,7 +55,6 @@ const DashboardLayout = ({ children }) => {
   const handleSidebarToggle = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-  console.log(userData);
   useEffect(() => {
     if (screenSize <= 900) {
       setIsSidebarOpen(false);
@@ -90,7 +89,7 @@ const DashboardLayout = ({ children }) => {
         <Box
           component="main"
           flexGrow={1}
-          p={3}
+          p={2}
           sx={{
             marginLeft: isSidebarOpen ? "220px" : "10px",
             marginTop: "70px",

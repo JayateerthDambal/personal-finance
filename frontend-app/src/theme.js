@@ -20,7 +20,7 @@ const lightPalette = {
         secondary: '#555', // Lighter color for light mode
         disabled: '#aaa', // Disabled text color for light mode
     },
-    background: { default: '#fff', paper: '#f5f5f5' },
+    background: { default: '#fff', paper: '#f5f5f5', coldSteel: '#e3edf8' },
     appBarColor: "#fff",
     buttonColor: "#90caf9"
 };

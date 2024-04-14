@@ -11,12 +11,13 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { useColorMode } from "../../contexts/ColorModeContext";
 import NightsStayIcon from "@mui/icons-material/NightsStay";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = ({ onSidebarToggle, isSidebarOpen }) => {
   const theme = useTheme();
   const { mode, toggleColorMode } = useColorMode();
   const drawerWidth = 220;
-
+  const navigate = useNavigate();
   return (
     <AppBar
       position="fixed"
@@ -50,7 +51,7 @@ const Navbar = ({ onSidebarToggle, isSidebarOpen }) => {
         <IconButton color="inherit" onClick={toggleColorMode}>
           {mode === "dark" ? <Brightness7Icon /> : <NightsStayIcon />}
         </IconButton>
-        <IconButton color="inherit">
+        <IconButton color="inherit" onClick={() => navigate("/user-profile")}>
           <AccountCircleIcon />
         </IconButton>
       </Toolbar>
