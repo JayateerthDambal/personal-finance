@@ -30,3 +30,4 @@ class KeywordSerializer(serializers.Serializer):
     def validate_keywords(self, value):
         # Optional: Add any custom validation for your keywords here
         return value
+    

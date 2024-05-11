@@ -16,7 +16,4 @@ urlpatterns = [
          name='add-bank-account'),
     path("get-accounts/", views.GetBankAccountsAPIView.as_view(), name='get-accounts'),
 
-    path("upload-statement/<int:account_id>", views.BankStatementUploadAPIView.as_view(),
-         name="upload-statement"),
-
 ]

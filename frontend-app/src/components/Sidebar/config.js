@@ -15,6 +15,11 @@ const config = [
         Icon: MdAccountBalance
     },
     {
+        title: "Transactions",
+        path: '/transactions',
+        Icon: IoIosAnalytics
+    },
+    {
         title: 'Analytics',
         path: '/analytics',
         Icon: IoIosAnalytics

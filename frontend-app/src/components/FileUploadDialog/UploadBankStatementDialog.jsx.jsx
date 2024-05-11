@@ -56,22 +56,31 @@ const UploadBankStatementDialog = ({ open, handleClose }) => {
 
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("bank_account", selectedAccount);
 
     try {
-      const response = await axios.post(
-        `${BACKEND_URL}/upload-statement/${selectedAccount}`,
-        formData,
+      const response = await fetch(
+        `${BACKEND_URL}/analysis/upload-transactions/${selectedAccount}/`,
         {
+          method: "POST",
           headers: {
             Authorization: `Bearer ${access_token}`,
-            "Content-Type": "multipart/form-data",
           },
+          body: formData,
         }
       );
-      console.log("Upload successful:", response.data);
-      handleClose(); // Close dialog after upload
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to upload file: ${errorText}`);
+      }
+
+      const result = await response.json();
+      alert("File uploaded successfully!");
+      handleClose(); // Close the dialog on successful upload
     } catch (error) {
-      console.error("Error uploading file:", error);
+      console.error("Error uploading file:", error.message);
+      alert(`Error uploading file: ${error.message}`);
     }
   };
 

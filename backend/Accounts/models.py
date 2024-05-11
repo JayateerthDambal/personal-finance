@@ -58,13 +58,6 @@ class BankAccount(models.Model):
         return f"A/C No. {self.reference_name} - {self.account_type}"
 
 
-class BankStatement(models.Model):
-    bank_account = models.ForeignKey(
-        BankAccount, related_name='statements', on_delete=models.CASCADE)
-    encrypted_data = models.BinaryField()
-    upload_date = models.DateTimeField(auto_now_add=True)
-
-
 class SubscriptionPlan(models.Model):
     DURATION_CHOICES = (('1M', '1 Month'), ('3M', '3 Months'),
                         ('6M', '6 Months'), ('12M', '12 Months'),)

@@ -9,25 +9,37 @@ from .utils import Util
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(
-        style={'input': 'password'}, write_only=True)
+        style={'input_type': 'password'}, write_only=True)
 
     class Meta:
         model = UserAccount
-        fields = ["email", "first_name", "last_name",
-                  "profession", "password", "password2"]
+        fields = ["email", "first_name", "last_name", "password", "password2"]
+        extra_kwargs = {'password': {'write_only': True}}
 
     def validate(self, attrs):
         password = attrs.get("password")
         password2 = attrs.get("password2")
         if password != password2:
             raise serializers.ValidationError(
-                "Password and Confirm Password don't Match")
-        return attrs
+                "Password and Confirm Password don't match")
+        return super().validate(attrs)
 
-    # Create the User using above data
+    def validate_password(self, value):
+        if len(value) < 8:
+            raise serializers.ValidationError(
+                "Password must be at least 8 characters long.")
+        if not any(char.isdigit() for char in value):
+            raise serializers.ValidationError(
+                "Password must contain at least one digit.")
+        if not any(char.isalpha() for char in value):
+            raise serializers.ValidationError(
+                "Password must contain at least one letter.")
+        return value
+
     def create(self, validated_data):
+        validated_data.pop('password2', None)
         user = UserAccount.objects.create_user(**validated_data)
-
+        user.save()
         return user
 
 
@@ -127,3 +139,8 @@ class BankAccountSerializer(serializers.ModelSerializer):
         # The user is added from the request context, ensuring the bank account is linked to the logged-in user
         user = self.context['request'].user
         return BankAccount.objects.create(user=user, **validated_data)
+
+
+class BankStatementUploadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BankAccount

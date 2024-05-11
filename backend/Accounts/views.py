@@ -1,6 +1,10 @@
+from .models import BankAccount
+from rest_framework.permissions import IsAuthenticated
+from django.http import HttpResponse
+import pandas as pd
 from django.shortcuts import render
 import json
-from .models import UserAccount, BankAccount, BankStatement
+from .models import UserAccount, BankAccount
 from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.core.files import File
@@ -13,8 +17,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from . import serializers
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
-from rest_framework.parsers import FileUploadParser
-from .encryption_logic import encrypt_data
+from rest_framework.parsers import MultiPartParser, FormParser
+from finance_analysis.models import Transaction, Category
 
 
 def serverHealth(request):
@@ -116,31 +120,3 @@ class BankAccountCreateView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class BankStatementUploadAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-    renderer_classes = [UserRenderer]
-
-    def post(self, request, account_id):
-        user = request.user
-
-        try:
-            bank_account = BankAccount.objects.get(id=account_id, user=user)
-
-        except BankAccount.DoesNotExist:
-            return Response({'error': 'Bank account does not exist'}, status=status.HTTP_404_NOT_FOUND)
-
-        file = request.FILES.get('file')
-        if file is None:
-            return Response({'error': 'No file uploaded'}, status=status.HTTP_400_BAD_REQUEST)
-        print(file.read())
-        encrypted_data = encrypt_data(file.read())
-
-        bank_statement = BankStatement(
-            bank_account=bank_account,
-            encrypted_data=ContentFile(encrypted_data, name=file.name)
-        )
-        bank_statement.save()
-
-        return Response({'message': 'Bank statement uploaded successfully'}, status=status.HTTP_201_CREATED)
