@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
 import { DashboardLayout } from "./layouts";
-import { DashboardPage, LoginPage, UserProfilePage, AccountsPage, TransactionsPage } from "./pages";
+import { DashboardPage, LoginPage, UserProfilePage, AccountsPage, TransactionsPage, CategoriesPage } from "./pages";
 import AuthLayout from './layouts/AuthLayout';
 import { getToken } from './services/LocalStorageService';
 import { CircularProgress } from "@mui/material";
@@ -71,6 +71,8 @@ const Router = () => {
                 { path: "user-profile", element: <UserProfilePage /> },
                 { path: "accounts", element: <AccountsPage /> },
                 { path: 'transactions', element: <TransactionsPage /> },
+                { path: "categories", element: <CategoriesPage /> },
+
             ]
         },
         // Public Routes

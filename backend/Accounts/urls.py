@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 urlpatterns = [
     # Create and login Accounts
+    path("health-check/", views.serverHealth, name='check-health'),
     path("login/", views.UserLoginView.as_view(), name='user-login'),
     path("register/", views.UserRegistrationView.as_view(), name='user-register'),
 
@@ -12,8 +13,8 @@ urlpatterns = [
     path("verify-token/", views.VerifyTokenAPIView.as_view(), name='verify-token'),
 
     #  Bank Account Functions
-    path('add-bank-account/', views.BankAccountCreateView.as_view(),
+    path('add-bank-account/', views.AccountCreateView.as_view(),
          name='add-bank-account'),
-    path("get-accounts/", views.GetBankAccountsAPIView.as_view(), name='get-accounts'),
+    path("get-accounts/", views.GetAccountsAPIView.as_view(), name='get-accounts'),
 
 ]

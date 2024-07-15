@@ -73,6 +73,7 @@ const DashboardLayout = ({ children }) => {
         <Navbar
           onSidebarToggle={handleSidebarToggle}
           isSidebarOpen={isSidebarOpen}
+          userData={userData}
         />
         <Sidebar
           open={isSidebarOpen}

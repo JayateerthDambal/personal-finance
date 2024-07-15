@@ -5,3 +5,4 @@ export { default as CustomField } from "./Text-Field/CustomField";
 export { default as AnimatedButton } from "./Button/AnimatedButton";
 export { default as BankSelector } from "./BankSelector/BankSelector";
 export { default as UploadBankStatementDialog } from './FileUploadDialog/UploadBankStatementDialog.jsx'
+export { default as CategoryModal } from "./Modals/CategoryModal.jsx";

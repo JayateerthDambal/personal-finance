@@ -21,7 +21,14 @@ import { Logout } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { unSetUserToken } from "../../features/authSlice";
 import { removeToken } from "../../services/LocalStorageService";
+import { motion } from "framer-motion";
+
 const drawerWidth = 220;
+
+const listItemVariants = {
+  hidden: { opacity: 0, x: -50 },
+  visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 300 } },
+};
 
 const Sidebar = ({ open, userData }) => {
   const theme = useTheme();
@@ -40,31 +47,54 @@ const Sidebar = ({ open, userData }) => {
     removeToken();
     navigate("/auth/login");
   };
-  const renderListItem = (item) => (
-    <ListItem
-      button
-      onClick={() => (item.subLinks ? toggleSubLinks(item.title) : null)}
-      style={{
-        padding: "10px",
-        backgroundColor: isActive(item.path)
-          ? theme.palette.action.selected
-          : "transparent", // Change background color if active
-        borderRadius: "12px",
-      }}
-    >
-      <ListItemIcon>
-        <item.Icon />
-      </ListItemIcon>
-      <ListItemText primary={item.title} />
-      {item.subLinks ? (
-        openSubLinks[item.title] ? (
-          <ExpandLess />
-        ) : (
-          <ExpandMore />
-        )
-      ) : null}
-    </ListItem>
-  );
+  const renderListItem = (item) => {
+    const bgColor = isActive(item.path)
+      ? theme.palette.listItemColor
+      : "transparent";
+
+    return (
+      <motion.li
+        variants={listItemVariants}
+        initial="hidden"
+        animate="visible"
+        whileHover={{
+          scale: 1.05,
+          backgroundColor: theme.palette.listItemColor,
+        }}
+        whileTap={{
+          scale: 0.95,
+          backgroundColor: theme.palette.listItemColor,
+        }}
+        transition={{ duration: 0.2 }}
+        style={{ borderRadius: "12px", marginTop: "5px" }}
+      >
+        <ListItem
+          button
+          onClick={() => (item.subLinks ? toggleSubLinks(item.title) : null)}
+          sx={{
+            padding: "10px",
+            backgroundColor: bgColor,
+            borderRadius: "12px",
+            "&:hover": {
+              backgroundColor: theme.palette.listItemColor,
+            },
+          }}
+        >
+          <ListItemIcon>
+            <item.Icon />
+          </ListItemIcon>
+          <ListItemText primary={item.title} />
+          {item.subLinks ? (
+            openSubLinks[item.title] ? (
+              <ExpandLess />
+            ) : (
+              <ExpandMore />
+            )
+          ) : null}
+        </ListItem>
+      </motion.li>
+    );
+  };
 
   return (
     <Drawer
@@ -77,7 +107,7 @@ const Sidebar = ({ open, userData }) => {
         [`& .MuiDrawer-paper`]: {
           width: drawerWidth,
           boxSizing: "border-box",
-          backgroundColor: theme.palette.background.paper,
+          backgroundColor: theme.palette.background.default,
         },
       }}
     >
@@ -89,13 +119,13 @@ const Sidebar = ({ open, userData }) => {
         }}
       >
         <img
-          src="/assets/icons/logo/logo.svg"
+          src="/assets/ArthaLogoSvg.svg"
           alt="Logo"
           style={{ height: "40px" }}
         />
         <Box>
-          <Typography variant="subtitle2">
-            {userData.first_name} {userData.last_name}
+          <Typography variant="h5">
+            Artha
           </Typography>
         </Box>
       </Toolbar>
@@ -130,20 +160,30 @@ const Sidebar = ({ open, userData }) => {
                       style={{ textDecoration: "none", color: "inherit" }}
                       key={subLink.title}
                     >
-                      <ListItem
-                        button
-                        style={{
-                          paddingLeft: "20px",
-                          backgroundColor: isActive(subLink.path)
-                            ? theme.palette.background.coldSteel
-                            : "transparent",
-                        }}
+                      <motion.li
+                        variants={listItemVariants}
+                        initial="hidden"
+                        animate="visible"
+                        whileHover={{ scale: 1.08 }}
+                        whileTap={{ scale: 0.95 }}
                       >
-                        <ListItemIcon>
-                          <subLink.Icon />
-                        </ListItemIcon>
-                        <ListItemText primary={subLink.title} />
-                      </ListItem>
+                        <ListItem
+                          button
+                          style={{
+                            paddingLeft: "20px",
+                            backgroundColor: isActive(subLink.path)
+                              ? theme.palette.buttonColor
+                              : "transparent",
+                            borderRadius: "8px",
+                            marginTop: "5px",
+                          }}
+                        >
+                          <ListItemIcon>
+                            <subLink.Icon />
+                          </ListItemIcon>
+                          <ListItemText primary={subLink.title} />
+                        </ListItem>
+                      </motion.li>
                     </Link>
                   ))}
                 </List>

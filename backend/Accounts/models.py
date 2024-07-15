@@ -47,17 +47,6 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
         return f"{self.email}"
 
 
-class BankAccount(models.Model):
-    user = models.ForeignKey(
-        UserAccount, on_delete=models.CASCADE, related_name='bank_accounts')
-    reference_name = models.CharField(max_length=125, default='MyBankAccount')
-    account_type = models.CharField(max_length=55, choices=[(
-        'savings', 'Savings'), ('checking', 'Checking'), ('current', 'Current')])
-
-    def __str__(self):
-        return f"A/C No. {self.reference_name} - {self.account_type}"
-
-
 class SubscriptionPlan(models.Model):
     DURATION_CHOICES = (('1M', '1 Month'), ('3M', '3 Months'),
                         ('6M', '6 Months'), ('12M', '12 Months'),)

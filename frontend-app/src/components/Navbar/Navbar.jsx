@@ -13,7 +13,7 @@ import { useColorMode } from "../../contexts/ColorModeContext";
 import NightsStayIcon from "@mui/icons-material/NightsStay";
 import { useNavigate } from "react-router-dom";
 
-const Navbar = ({ onSidebarToggle, isSidebarOpen }) => {
+const Navbar = ({ onSidebarToggle, isSidebarOpen, userData }) => {
   const theme = useTheme();
   const { mode, toggleColorMode } = useColorMode();
   const drawerWidth = 220;
@@ -45,8 +45,13 @@ const Navbar = ({ onSidebarToggle, isSidebarOpen }) => {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-          Personal Finance
+        <Typography
+          variant="h5"
+          noWrap
+          component="div"
+          sx={{ flexGrow: 1, fontWeight: 600 }}
+        >
+          Hi, {userData.first_name}!
         </Typography>
         <IconButton color="inherit" onClick={toggleColorMode}>
           {mode === "dark" ? <Brightness7Icon /> : <NightsStayIcon />}

@@ -1,10 +1,11 @@
-from .models import UserAccount, SubscriptionModel, SubscriptionPlan, BankAccount
+from .models import UserAccount, SubscriptionModel, SubscriptionPlan
 from rest_framework import serializers
 from xml.dom import ValidationErr
-from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.encoding import force_bytes, DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from .utils import Util
+from finance_analysis.models import Account, AccountType
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -107,40 +108,59 @@ class SendPasswordResetEmailSerialzier(serializers.Serializer):
             raise ValidationErr("You are not a registered user.")
 
 
-class GetBankAccountSerializer(serializers.ModelSerializer):
-    user = UserProfileSerializer(read_only=True)
+class AccountTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AccountType
+        fields = ['id', 'name']
+
+
+class AccountTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AccountType
+        fields = ['id', 'name']
+
+
+class AccountSerializer(serializers.ModelSerializer):
+    account_type = AccountTypeSerializer()
 
     class Meta:
-        model = BankAccount
-        fields = ['id', 'user', 'reference_name', 'account_type']
-
-
-class BankAccountSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BankAccount
-        fields = ['id', 'reference_name', 'account_type', 'user']
-        # The user field should not be included in the request
+        model = Account
+        fields = ['id', 'reference_name', 'account_type', 'balance']
         read_only_fields = ('user',)
 
     def validate(self, attrs):
-        # Get the current user from the serializer context
         user = self.context['request'].user
         reference_name = attrs.get('reference_name')
-        account_type = attrs.get('account_type')
+        account_type_data = attrs.get('account_type')
 
-        # Check if a bank account with the same reference_name and account_type exists for this user
-        if BankAccount.objects.filter(user=user, reference_name=reference_name, account_type=account_type).exists():
-            raise serializers.ValidationError(
-                "A bank account with these details already exists.")
+        # Check for duplicate accounts under the same user with the given reference name and account type name
+        if account_type_data:
+            account_type_name = account_type_data.get('name')
+            if Account.objects.filter(user=user, reference_name=reference_name, account_type__name=account_type_name).exists():
+                raise serializers.ValidationError(
+                    "An account with this reference name and account type already exists for this user.")
 
         return attrs
 
     def create(self, validated_data):
-        # The user is added from the request context, ensuring the bank account is linked to the logged-in user
+        account_type_data = validated_data.pop('account_type')
+        account_type, _ = AccountType.objects.get_or_create(
+            name=account_type_data['name'])
         user = self.context['request'].user
-        return BankAccount.objects.create(user=user, **validated_data)
+        return Account.objects.create(user=user, account_type=account_type, **validated_data)
 
 
-class BankStatementUploadSerializer(serializers.ModelSerializer):
+class GetAccountsSerializer(serializers.ModelSerializer):
+    account_type = serializers.SerializerMethodField()
+
     class Meta:
-        model = BankAccount
+        model = Account
+        fields = ['id', 'reference_name', 'account_type', 'balance']
+
+    def get_account_type(self, obj):
+        return obj.account_type.name
+
+
+class AccountUploadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account

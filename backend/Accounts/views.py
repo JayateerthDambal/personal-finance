@@ -1,24 +1,17 @@
-from .models import BankAccount
 from rest_framework.permissions import IsAuthenticated
-from django.http import HttpResponse
-import pandas as pd
-from django.shortcuts import render
-import json
-from .models import UserAccount, BankAccount
+from finance_analysis.models import Account
 from django.http import JsonResponse
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from django.core.files import File
-from django.core.files.base import ContentFile
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate
 from .renderers import UserRenderer
 from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from . import serializers
-from rest_framework.exceptions import AuthenticationFailed, ValidationError
-from rest_framework.parsers import MultiPartParser, FormParser
-from finance_analysis.models import Transaction, Category
+from rest_framework.exceptions import AuthenticationFailed
+from datetime import datetime
+
 
 
 def serverHealth(request):
@@ -97,26 +90,28 @@ class VerifyTokenAPIView(APIView):
             return Response("Invaid Access Token", status=status.HTTP_401_UNAUTHORIZED)
 
 
-class GetBankAccountsAPIView(APIView):
+class GetAccountsAPIView(APIView):
     renderer_classes = [UserRenderer]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         user = request.user
-        accounts = BankAccount.objects.filter(user=user)
-        serializer = serializers.GetBankAccountSerializer(accounts, many=True)
+        accounts = Account.objects.filter(user=user)
+        serializer = serializers.GetAccountsSerializer(accounts, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class BankAccountCreateView(APIView):
+class AccountCreateView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, format=None):
-        serializer = serializers.BankAccountSerializer(
+        serializer = serializers.AccountSerializer(
             data=request.data, context={'request': request})
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+

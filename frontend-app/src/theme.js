@@ -22,7 +22,8 @@ const lightPalette = {
     },
     background: { default: '#fff', paper: '#f5f5f5', coldSteel: '#e3edf8' },
     appBarColor: "#fff",
-    buttonColor: "#90caf9"
+    buttonColor: "#ADA2FF",
+    listItemColor: "#ADA2FF"
 };
 
 const darkPalette = {
@@ -40,7 +41,7 @@ const darkPalette = {
     },
     background: { default: '#303030', paper: '#424242' },
     appBarColor: "#303030",
-    buttonColor: "#90caf9"
+    buttonColor: "#5755FE"
 };
 
 // const typography = {
@@ -63,6 +64,7 @@ const createModeTheme = (mode) => createTheme({
     palette: mode === 'light' ? lightPalette : darkPalette,
     typography: {
         allVariants: {
+            fontFamily: 'Montserrat',
             color: mode === 'light' ? lightPalette.text.primary : darkPalette.text.primary
         },
 
@@ -73,9 +75,9 @@ const createModeTheme = (mode) => createTheme({
                 root: {
                     borderRadius: 8,
                     color: 'white',
-                    backgroundColor: mode === 'light' ? '#7743FE' : '#7742FE',
+                    backgroundColor: mode === 'light' ? '#5755FE' : '#5755FE',
                     '&:hover': {
-                        backgroundColor: mode === 'light' ? '#115293' : '#648dae',
+                        backgroundColor: mode === 'light' ? '#5755FF' : '#648dae',
                     },
                 },
             },
@@ -84,10 +86,11 @@ const createModeTheme = (mode) => createTheme({
             styleOverrides: {
                 root: {
                     borderRadius: 8,
-                    color: mode === 'light' ? "#200E3A" : "#F3F8FF",
                     margin: "3px",
+                    color: mode === 'light' ? "#35374B" : "#F3F8FF",
                     '&:hover': {
-                        backgroundColor: mode === 'light' ? '#7743FE' : '#7742FE',
+                        backgroundColor: mode === 'light' ? '#CAEDFF' : '#7742FE',
+                        boxShadow: "3px 3px 8px -7px rgba(0,0,0,0.75)"
                     },
                 },
             },
